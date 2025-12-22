@@ -6,7 +6,7 @@
 import express, {Request, Response} from 'express';
 import cors from 'cors';
 import {addDays, format} from 'date-fns'
-import { wrapChartData, fetchEnergyData, filterDataByDate } from './services';
+import { wrapChartData, fetchEnergyData, filterDataByDate, getEnergyData } from './services';
 import { GraphsDataPack } from './types';
 //IMPORT*/
 
@@ -34,8 +34,8 @@ app.get('/api/energy-mix', async (req:Request, res: Response) => {
         const day0 = new Date();
         const day2 = addDays(day0,2);
 
-        console.log(`Fetching Data from External API: ${format(day0,'yyyy-MM-dd')}<->${format(day2,'yyyy-MM-dd')}`)
-        const bulkData = await fetchEnergyData(day0,day2);
+        console.log(`API Data Requested`)
+        const bulkData = await getEnergyData(day0,day2);
         const result: GraphsDataPack = {
             day0 : wrapChartData(filterDataByDate(bulkData,day0)),
             day1 : wrapChartData(filterDataByDate(bulkData,addDays(day0,1))),

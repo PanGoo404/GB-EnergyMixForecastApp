@@ -1,3 +1,7 @@
+/*Component with Pie Chart
+// 
+// ! Need to add CSS styles
+*/
 
 //IMPORT//
 import {PieChart, Pie, Cell, Tooltip, ResponsiveContainer} from 'recharts';

@@ -1,3 +1,7 @@
+/*Component Encapsulating Single Day Data
+// 
+// ! Need to add CSS styles
+*/
 
 //IMPORT//
 import type { DailyStats } from '../../../backend/src/types';

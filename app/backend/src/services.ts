@@ -22,16 +22,37 @@ const FUEL_CONFIG: Record<string, { color: string; label: string }> = {
   solar:   { color: 'rgba(246, 255, 120, 1)', label: 'Słońce' },
   wind:    { color: '#8dff0aff', label: 'Wiatr' }
 };
+const CACHE_TTL = 30*60*1000;
 //CONST*/
+
+//VAR//
+//IN MEMORY CACHE
+let storedData: GenerationData[] = [];
+let lastFetchTime = 0;
+//VAR*//
+
 
 export async function fetchEnergyData(startDate:Date,endDate:Date): Promise<GenerationData[]>
 {
-    console.log("API request")
+    console.log(`Fetching Data from External API: ${format(startDate,'yyyy-MM-dd')}<->${format(endDate,'yyyy-MM-dd')}`)
     const start = format(startDate, "yyyy-MM-dd'T'00:00'Z'");
     const end = format(endDate, "yyyy-MM-dd'T'23:55'Z'");
     const endpoint = `${API_URL}/${start}/${end}`;
     const response = await axios.get<ApiResponse>(endpoint);
     return response.data.data;
+};
+
+export async function getEnergyData(startDate:Date,endDate:Date): Promise<GenerationData[]>
+{
+    const now = Date.now();
+    if(storedData.length > 0 && (now-lastFetchTime)<CACHE_TTL)
+    {
+        console.log("Data in cache. Returning from memory");
+        return storedData;
+    }
+        lastFetchTime = now;
+        storedData = await fetchEnergyData(startDate,endDate);
+        return storedData
 };
 
 export function calculateCleanPerc(mix: any[])
@@ -58,6 +79,7 @@ export function filterDataByDate(data: GenerationData[], dateObj: Date = new Dat
     return data.filter(item=>item.from.startsWith(dateStr));
 };
 
+// Frontend Data Prep
 export function aggregateDailyMixData(dayData:GenerationData[])
 {
     if(!dayData.length) return [];
@@ -83,6 +105,7 @@ export function aggregateDailyMixData(dayData:GenerationData[])
     return chartData;
 };
 
+//Frontend Package Wrapper
 export function wrapChartData(dayData: GenerationData[])
 {
     return{
