@@ -1,6 +1,7 @@
 /*Component with Pie Chart
 // 
 // ! Need to add CSS styles
+// ! Problem with recharts lib: Throws warning on initial load, (chart doesnt have size set on load) -> deem stable but dirty. Backlog for Fix.
 */
 
 //IMPORT//
