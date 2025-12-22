@@ -61,7 +61,7 @@ export function filterDataByDate(data: GenerationData[], dateObj: Date = new Dat
 export function aggregateDailyMixData(dayData:GenerationData[])
 {
     if(!dayData.length) return [];
-    
+
     const chartData: ChartChunk[] = []
     const fuelTotals: Record<string,number> = {};
 
@@ -75,7 +75,8 @@ export function aggregateDailyMixData(dayData:GenerationData[])
     for (const fuel in fuelTotals)
     {
         const avgPerc = fuelTotals[fuel]/dayData.length;
-        const config = FUEL_CONFIG[fuel] || {color: '#000000ff', label: fuel};
+        if (avgPerc==0)continue;
+        const config = FUEL_CONFIG[fuel] || {color: '#757575ff', label: fuel};
         chartData.push({id: fuel, label: config.label, value: parseFloat(avgPerc.toFixed(FLOAT_DEC_LEN)), color: config.color});
     }
 
