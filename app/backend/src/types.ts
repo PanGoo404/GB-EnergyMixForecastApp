@@ -1,4 +1,4 @@
-/*/ By rule of Domain Separation both EndPoint belong to the same domain <-> belong to the same service. 
+/*/ By rule of Domain Separation both EndPoints belong to the same domain <-> belong to the same service. 
 /// No file separation.
 ///
 /*/
@@ -48,4 +48,5 @@ export interface ChargingRequest{
 export interface ChargingResponse{
   startDate: string;
   endDate: string;
+  cleanPerc: number;
 }

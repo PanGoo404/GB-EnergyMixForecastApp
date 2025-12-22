@@ -3,7 +3,7 @@
 /*/
 //IMPORT//
 import axios from "axios"
-import {ApiResponse, GenerationData,GenerationMix, ChartChunk, DailyStats} from './types';
+import {ApiResponse, GenerationData,GenerationMix, ChartChunk, DailyStats, ChargingResponse} from './types';
 import {format} from 'date-fns';
 //IMPORT*/
 
@@ -78,6 +78,48 @@ export function filterDataByDate(data: GenerationData[], dateObj: Date = new Dat
     const dateStr = format(dateObj,'yyyy-MM-dd')
     return data.filter(item=>item.from.startsWith(dateStr));
 };
+
+//ENDPOINT 2
+
+export function findChargingWindow(data: GenerationData[],durationInHours: number): ChargingResponse | null
+{
+    if(durationInHours<0||durationInHours>6) return null;
+    const windowSpan = Math.ceil(durationInHours)*2
+    if(data.length<windowSpan) return null;
+
+    const cleanPerc = data.map(bit => calculateCleanPerc(bit.generationmix));
+
+    let currentWindowPerc = 0
+
+    for (let i = 0; i < windowSpan; i++)
+    {
+        currentWindowPerc += cleanPerc[i];
+    }
+
+    let maxCleanEngPerc = currentWindowPerc;
+    let bestStart = 0
+
+    for (let i = 1; i <= cleanPerc.length - windowSpan; i++)
+    {
+        currentWindowPerc = currentWindowPerc - cleanPerc[i-1] + cleanPerc[i + windowSpan - 1];
+        
+        if (currentWindowPerc > maxCleanEngPerc)
+        {
+                maxCleanEngPerc = currentWindowPerc;
+                bestStart = i;
+        }
+    }
+
+    const avgCleanPerc = maxCleanEngPerc / windowSpan;
+    const startDate = data[bestStart].from;
+    const endDate = data[bestStart + windowSpan - 1].to;
+
+
+    return {startDate,endDate,cleanPerc: parseFloat(avgCleanPerc.toFixed(FLOAT_DEC_LEN))}
+}
+
+
+
 
 // Frontend Data Prep
 export function aggregateDailyMixData(dayData:GenerationData[])

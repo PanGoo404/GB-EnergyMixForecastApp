@@ -6,8 +6,8 @@
 import express, {Request, Response} from 'express';
 import cors from 'cors';
 import {addDays, format} from 'date-fns'
-import { wrapChartData, fetchEnergyData, filterDataByDate, getEnergyData } from './services';
-import { GraphsDataPack } from './types';
+import { wrapChartData, fetchEnergyData, filterDataByDate, getEnergyData, findChargingWindow } from './services';
+import { ChargingRequest, GraphsDataPack } from './types';
 //IMPORT*/
 
 const PORT = 3000;
@@ -44,6 +44,7 @@ app.get('/api/energy-mix', async (req:Request, res: Response) => {
 
         res.json(result);
 });
+//END POINT 1 */
 
 
 /*/ END POINT 2 - Energy Mix Disp
@@ -53,6 +54,36 @@ app.get('/api/energy-mix', async (req:Request, res: Response) => {
 //Push Relative Data to Front
 //Start,End (Date), CleanPerc (Number) 
 /*/
+
+app.post('/api/optimize', async (req:Request, res: Response) =>{
+  try{
+    const body = req.body as ChargingRequest;
+    const duration = body.durationInHours;
+
+    if (!duration||duration<=0||duration>6)
+    {
+      res.status(400).json({error: "Podaj liczbę pełnych godzin z zakresu 1-6!"})
+      return;
+    }
+    const day0 = new Date();
+    const day2 = addDays(day0,2)
+    const data = await getEnergyData(day0,day2);
+    const result = findChargingWindow(data,duration);
+    if (result){
+      res.json(result);
+    }
+    else{
+      res.status(400).json({error: "Nie znaleziono optymalnego okna ładowania."})
+    }
+  }catch(error){
+    console.error("ERROR@/api/optimize:",error);
+    res.status(500).json({error: "Błąd Serwera"});
+  }
+
+});
+
+
+//END POINT 2 */
 
 app.listen(PORT, () => {
 console.log(`Backend URL on Host: http://localhost:${PORT}`);
