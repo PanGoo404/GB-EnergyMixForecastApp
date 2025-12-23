@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import axios from 'axios';
 import type { ChargingResponse } from '../../../backend/src/types';
+import {API_URL} from '../config';
 
 interface Props{
     onError: (msg: string) => void;
@@ -17,7 +18,7 @@ const ChargingCalculator = ({onError}: Props) =>{
 
         try{
             const payload = {durationInHours: duration};
-            const response = await axios.post<ChargingResponse>('http://localhost:3000/api/optimize',payload);
+            const response = await axios.post<ChargingResponse>(`${API_URL}/api/optimize`,payload);
 
             setResult(response.data);
         }catch(error: any){

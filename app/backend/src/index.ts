@@ -10,12 +10,18 @@ import { wrapChartData, fetchEnergyData, filterDataByDate, getEnergyData, findCh
 import { ChargingRequest, GraphsDataPack } from './types';
 //IMPORT*/
 
-const PORT = 3000;
+//ENV CONFIG//
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+const ALLOWED_ORIGIN = process.env.CLIENT_URL || 'http://localhost:5173'
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [ALLOWED_ORIGIN,'http://localhost:5173','http://127.0.0.1:5173'],
+  methods: ['GET','POST'],
+  credentials: true
+}));
 app.use(express.json());
-
+//ENV CONFIG*/
 
 /*/ END POINT 1 - Energy Mix Disp
 //Fetch API Data
@@ -81,10 +87,9 @@ app.post('/api/optimize', async (req:Request, res: Response) =>{
   }
 
 });
-
-
 //END POINT 2 */
 
-app.listen(PORT, () => {
+
+app.listen(PORT, '0.0.0.0',() => {
 console.log(`Backend URL on Host: http://localhost:${PORT}`);
 });

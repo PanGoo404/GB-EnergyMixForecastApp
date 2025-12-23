@@ -5,6 +5,7 @@ import type { GraphsDataPack } from '../../backend/src/types';
 import InfoCard from './components/InfoCard';
 import ChargingCalculator from './components/ChargingCalculator';
 import ErrorPopup from './components/ErrorPopUp';
+import {API_URL} from './config';
 //IMPORT*/
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
   const [errorMsg, setErrorMsg] = useState<string|null>(null);
 
   useEffect(() => {
-    axios.get<GraphsDataPack>('http://localhost:3000/api/energy-mix')
+    axios.get<GraphsDataPack>(`${API_URL}/api/energy-mix`)
       .then(response => {
         setData(response.data);
         setLoading(false);
