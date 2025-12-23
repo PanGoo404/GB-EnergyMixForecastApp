@@ -96,6 +96,7 @@ export function findChargingWindow(data: GenerationData[],durationInHours: numbe
 
     let currentWindowPerc = 0
 
+
     for (let i = 0; i < windowSpan; i++)
     {
         currentWindowPerc += cleanPerc[i];
