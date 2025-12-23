@@ -5,6 +5,7 @@ import type { GraphsDataPack } from '../../backend/src/types';
 import InfoCard from './components/InfoCard';
 import ChargingCalculator from './components/ChargingCalculator';
 import ErrorPopup from './components/ErrorPopUp';
+import {ChartLegend} from './components/ChartLegend'
 import {API_URL} from './config';
 //IMPORT*/
 
@@ -43,7 +44,7 @@ function App() {
         <h2>Prognozowany Miks</h2>
         
         {loading && <p style={{textAlign: 'center'}}>Ładowanie danych...</p>}
-
+        {data && <ChartLegend data={data} />}
         {data && (
           <div className="charts-grid">
             <InfoCard title="Dziś" stats={data.day0} />
