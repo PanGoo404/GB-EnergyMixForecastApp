@@ -27,7 +27,9 @@ export const ChartLegend = ({ data }: ChartLegendProps) => {
     return Array.from(uniqueItemsMap.values());
   }, [data]);
 
-  if (!data || legendItems.length === 0) return null;
+  if (!data || legendItems.length === 0){
+    throw new Error("Brak danych dla Legendy.");
+  }
 
   return (
     <div style={{ 

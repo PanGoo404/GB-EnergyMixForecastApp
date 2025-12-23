@@ -116,8 +116,8 @@ export function findChargingWindow(data: GenerationData[],durationInHours: numbe
     }
 
     const avgCleanPerc = maxCleanEngPerc / windowSpan;
-    const startDate = data[bestStart].from;
-    const endDate = data[bestStart + windowSpan - 1].to;
+    const startDate = format(data[bestStart].from,'dd.MM • HH:mm');
+    const endDate = format(data[bestStart + windowSpan - 1].to,'dd.MM • HH:mm');
 
 
     return {startDate,endDate,cleanPerc: parseFloat(avgCleanPerc.toFixed(FLOAT_DEC_LEN))}
