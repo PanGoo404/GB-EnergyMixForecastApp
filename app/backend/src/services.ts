@@ -32,14 +32,19 @@ let lastFetchTime = 0;
 //VAR*//
 
 
-export async function fetchEnergyData(startDate:Date,endDate:Date): Promise<GenerationData[]>
+async function fetchEnergyData(startDate:Date,endDate:Date): Promise<GenerationData[]>
 {
     console.log(`Fetching Data from External API: ${format(startDate,'yyyy-MM-dd')}<->${format(endDate,'yyyy-MM-dd')}`)
     const start = format(startDate, "yyyy-MM-dd'T'00:00'Z'");
     const end = format(endDate, "yyyy-MM-dd'T'23:55'Z'");
     const endpoint = `${API_URL}/${start}/${end}`;
+    try{
     const response = await axios.get<ApiResponse>(endpoint);
     return response.data.data;
+    }catch(error){
+        console.error(error);
+    }
+    return []
 };
 
 export async function getEnergyData(startDate:Date,endDate:Date): Promise<GenerationData[]>
@@ -47,7 +52,7 @@ export async function getEnergyData(startDate:Date,endDate:Date): Promise<Genera
     const now = Date.now();
     if(storedData.length > 0 && (now-lastFetchTime)<CACHE_TTL)
     {
-        console.log("Data in cache. Returning from memory");
+        console.log(`Data in cache(TS:${lastFetchTime}). Returning from memory`);
         return storedData;
     }
         lastFetchTime = now;
@@ -55,14 +60,14 @@ export async function getEnergyData(startDate:Date,endDate:Date): Promise<Genera
         return storedData
 };
 
-export function calculateCleanPerc(mix: any[])
+function calculateCleanPerc(mix: any[])
 {
     return mix.reduce((sum,record) => {
         return CLEAN_FUELS.includes(record.fuel) ? sum + record.perc : sum;
     },0);//Last argument for array.reduce
 };
 
-export function calculateDailyCleanPerc(dayData: GenerationData[])
+function calculateDailyCleanPerc(dayData: GenerationData[])
 {
     if (!dayData.length) return 0;
     const totalCleanSum = dayData.reduce((sum, interval) => {
@@ -122,7 +127,7 @@ export function findChargingWindow(data: GenerationData[],durationInHours: numbe
 
 
 // Frontend Data Prep
-export function aggregateDailyMixData(dayData:GenerationData[])
+function aggregateDailyMixData(dayData:GenerationData[])
 {
     if(!dayData.length) return [];
 
