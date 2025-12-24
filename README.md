@@ -17,9 +17,9 @@ Aplikacja wykorzystuje zewnętrzne API: https://carbon-intensity.github.io/api-d
 ## Możliwe rozszerzenie o funkcjonalności:
 
 * **Obsługa błędów API:** Dodać mechanizm ponawiania zapytań (retry) w przypadku niedostępności zewnętrznego API.
-* **Wybór regionu:** Obecnie dane są ogólnokrajowe, planowane dodanie podziału na regiony UK.
+* **Wybór regionu:** Obecnie dane są ogólnokrajowe, możliwe dodanie podziału na regiony UK.
 * **Dark Mode:** Obsługa trybu ciemnego dla interfejsu.
-* **Opcje wyboru języka:** Obecnie aplikacja nie posiada wersji jeżykowaych poza Polskim.
+* **Opcje wyboru języka:** Obecnie aplikacja nie posiada wersji jezykowaych poza Polskim.
 
 ## Stack Technologiczny
 
