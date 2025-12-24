@@ -1,0 +1,78 @@
+# GB Energy Mix & EV Charging Optimizer
+
+## Aplikacja full-stack monitorująca brytyjski miks energetyczny i pomagająca właścicielom aut elektrycznych (EV) znaleźć najbardziej ekologiczne okno ładowania.
+
+Aplikacja wykorzystuje otwarte API: 
+
+## Funkcjonalności
+
+* **Dashboard Energetyczny:** Wizualizacja miksu energetycznego (Węgiel, Wiatr, Atom, Gaz, etc.) dla obecnej doby oraz prognozy na 48h.
+* **Wizualizacja:** Wykresy kołowe (Pie Charts) z wykorzystaniem biblioteki Recharts.
+* **Kalkulator EV:** Algorytm "Sliding Window" wyszukujący najlepsze okno czasowe (np. 2h) na ładowanie samochodu, bazując na najniższym śladzie węglowym.
+* **Inteligentna Legenda:** Dynamicznie generowana legenda, która adaptuje się do dostępnych źródeł energii.
+* **Time Travel Protection:** Filtrowanie danych historycznych, aby kalkulator proponował tylko przyszłe sloty czasowe.
+
+
+## Możliwe rozszerzenie o funkcjonalności:
+
+* **Obsługa błędów API:** Dodać mechanizm ponawiania zapytań (retry) w przypadku niedostępności zewnętrznego API.
+* **Wybór regionu:** Obecnie dane są ogólnokrajowe, planowane dodanie podziału na regiony UK.
+* **Dark Mode:** Obsługa trybu ciemnego dla interfejsu.
+* **Opcje wyboru języka:** Obecnie aplikacja nie posiada wersji jeżykowaych poza Polskim.
+
+## Stack Technologiczny
+
+* **Frontend:** React, Vite, TypeScript, Recharts, Vitest (Testing Library).
+* **Backend:** Node, Express, TypeScript, Axios, Jest.
+
+## Instalacja i Uruchomienie
+
+Projekt składa się z dwóch niezależnych części: serwera i klienta. Wymagają uruchomienia w osobnych terminalach. Projekt zawiera również przygotowane Dockerfile po jedyn dla forntednu i backendu.
+
+### Uruchomienie lokalnie:
+
+### 1. Backend (API)
+
+```bash
+cd ./app/backend
+npm install
+npm run dev
+```
+Serwer wystartuje na porcie zdefiniowanym w konfiguracji (domyślnie 3000).
+### 2. Frontend (UI)
+```Bash
+
+cd ./app/frontend
+npm install
+npm run dev
+```
+Aplikacja dostępna pod adresem wskazanym przez Vite (domyślnie : http://localhost:5173).
+
+### Wariant Docker
+* Zbudować obrazy dla frontendu i backendu.
+* Ustawić zmienne środowiskowe zgodnie z wymogami środowiska uruchomienia lub orchestratora:
+#### Dla Frontendu:
+```YAML
+VITE_API_URL - adres/url backendu.
+```
+#### Dla Backendu:
+```YAML
+CLIENT_URL - adres/url frontendu. Pozwala na przepuszczenie zapytań z frontendu przez CORS
+PORT - port który ma zostac użyty do wyeksponownia api na zewnątrz(domyślne 3000).
+```
+* Uruchomić kontenery w dedykowanych środowiskach.
+### !(Nie ma potrzeby ustawiać zmiennych środowiskowcyh przy uruchomieniu w terminalach (lokalnie) ze względu na wartości domyślne przygotowane w kodzie)!
+# Uruchomienie Testów
+Frontend (Komponenty i Logika UI):
+
+```Bash
+cd ./app/frontend
+npm run test
+```
+Backend (Algorytmy i API):
+```Bash
+cd ./app/backend
+npm run test
+```
+
+Autor: Jakub Rejek
