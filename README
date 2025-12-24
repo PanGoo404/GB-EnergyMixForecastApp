@@ -2,14 +2,15 @@
 
 ## Aplikacja full-stack monitorująca brytyjski miks energetyczny i pomagająca właścicielom aut elektrycznych (EV) znaleźć najbardziej ekologiczne okno ładowania.
 
-Aplikacja wykorzystuje otwarte API: 
+Aplikacja wykorzystuje zewnętrzne API: https://carbon-intensity.github.io/api-definitions/?shell#get-generation-from-to
 
 ## Funkcjonalności
 
 * **Dashboard Energetyczny:** Wizualizacja miksu energetycznego (Węgiel, Wiatr, Atom, Gaz, etc.) dla obecnej doby oraz prognozy na 48h.
 * **Wizualizacja:** Wykresy kołowe (Pie Charts) z wykorzystaniem biblioteki Recharts.
-* **Kalkulator EV:** Algorytm "Sliding Window" wyszukujący najlepsze okno czasowe (np. 2h) na ładowanie samochodu, bazując na najniższym śladzie węglowym.
+* **Kalkulator EV:** Algorytm "Sliding Window" wyszukujący najlepsze okno czasowe (1-6h) na ładowanie samochodu, bazując na najwyższym udziale zielonych źródeł energii.
 * **Inteligentna Legenda:** Dynamicznie generowana legenda, która adaptuje się do dostępnych źródeł energii.
+* **IN Memory Cache:** API nie jest odpytywane jeżeli nie spowodowało by to zmiany w danych. Dane są przechowywane w pamięci operacyjnej serwera.
 * **Time Travel Protection:** Filtrowanie danych historycznych, aby kalkulator proponował tylko przyszłe sloty czasowe.
 
 
@@ -27,7 +28,7 @@ Aplikacja wykorzystuje otwarte API:
 
 ## Instalacja i Uruchomienie
 
-Projekt składa się z dwóch niezależnych części: serwera i klienta. Wymagają uruchomienia w osobnych terminalach. Projekt zawiera również przygotowane Dockerfile po jedyn dla forntednu i backendu.
+Projekt składa się z dwóch niezależnych części: serwera i klienta. Wymagają uruchomienia w osobnych terminalach. Projekt zawiera również przygotowane Dockerfile po jednym dla frontendu i backendu.
 
 ### Uruchomienie lokalnie:
 
@@ -41,7 +42,6 @@ npm run dev
 Serwer wystartuje na porcie zdefiniowanym w konfiguracji (domyślnie 3000).
 ### 2. Frontend (UI)
 ```Bash
-
 cd ./app/frontend
 npm install
 npm run dev
@@ -61,7 +61,8 @@ CLIENT_URL - adres/url frontendu. Pozwala na przepuszczenie zapytań z frontendu
 PORT - port który ma zostac użyty do wyeksponownia api na zewnątrz(domyślne 3000).
 ```
 * Uruchomić kontenery w dedykowanych środowiskach.
-### !(Nie ma potrzeby ustawiać zmiennych środowiskowcyh przy uruchomieniu w terminalach (lokalnie) ze względu na wartości domyślne przygotowane w kodzie)!
+### !(Nie ma potrzeby ustawiać zmiennych środowiskowych przy uruchomieniu w terminalach (lokalnie) ze względu na wartości domyślne przygotowane w kodzie)!
+
 # Uruchomienie Testów
 Frontend (Komponenty i Logika UI):
 
@@ -75,4 +76,4 @@ cd ./app/backend
 npm run test
 ```
 
-Autor: Jakub Rejek
+### Autor: Jakub Rejek
