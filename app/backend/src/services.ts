@@ -85,14 +85,19 @@ export function filterDataByDate(data: GenerationData[], dateObj: Date = new Dat
 };
 
 //ENDPOINT 2
-
+// Quick Fix! Can cut data before putting it on execution stack
 export function findChargingWindow(data: GenerationData[],durationInHours: number): ChargingResponse | null
 {
     if(durationInHours<0||durationInHours>6) return null;
     const windowSpan = Math.ceil(durationInHours)*2
     if(data.length<windowSpan) return null;
-
-    const cleanPerc = data.map(bit => calculateCleanPerc(bit.generationmix));
+    const now = new Date();
+    //Quick Fix - For redundant data pass
+    //Data in the past is cut of before search.
+    //futureData is used in place data from now on.
+    const firstInterval = data.findIndex(item=>new Date(item.from)>=now)
+    const futureData = data.slice(firstInterval);
+    const cleanPerc = futureData.map(bit => calculateCleanPerc(bit.generationmix));
 
     let currentWindowPerc = 0
 
@@ -116,8 +121,8 @@ export function findChargingWindow(data: GenerationData[],durationInHours: numbe
     }
 
     const avgCleanPerc = maxCleanEngPerc / windowSpan;
-    const startDate = format(data[bestStart].from,'dd.MM • HH:mm');
-    const endDate = format(data[bestStart + windowSpan - 1].to,'dd.MM • HH:mm');
+    const startDate = format(futureData[bestStart].from,'dd.MM - HH:mm');
+    const endDate = format(futureData[bestStart + windowSpan - 1].to,'dd.MM - HH:mm');
 
 
     return {startDate,endDate,cleanPerc: parseFloat(avgCleanPerc.toFixed(FLOAT_DEC_LEN))}
